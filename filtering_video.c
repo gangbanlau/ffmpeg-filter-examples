@@ -37,7 +37,7 @@
 #include <libavfilter/buffersrc.h>
 #include <libavutil/opt.h>
 
-const char *filter_descr = "scale=78:-1";
+const char *filter_descr = "[buf:in]scale=78:-1[buf:out]";
 /* other way:
    scale=78:24 [scl]; [scl] transpose=cclock // assumes "[in]" and "[out]" to be input output pads respectively
  */
@@ -191,7 +191,7 @@ static int init_filters(const char *filters_descr)
     }
    
     // build the filters string here
-    snprintf(filters, sizeof(filters), "buffer@in=video_size=%dx%d:pix_fmt=%d:time_base=%d/%d:pixel_aspect=%d/%d , %s , buffersink@out",
+    snprintf(filters, sizeof(filters), "buffer@in=video_size=%dx%d:pix_fmt=%d:time_base=%d/%d:pixel_aspect=%d/%d[buf:in];%s;[buf:out]buffersink@out",
 		    dec_ctx->width, dec_ctx->height, dec_ctx->pix_fmt,
 		    time_base.num, time_base.den,
 		    dec_ctx->sample_aspect_ratio.num, dec_ctx->sample_aspect_ratio.den,
